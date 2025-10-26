@@ -130,7 +130,7 @@ def make_vapi_call(destination_phone_number: str, customer_name: Optional[str] =
                     }
                     
             except httpx.TimeoutException as e:
-    return {
+                return {
                     "success": False,
                     "error": f"Request timeout after 60 seconds: {str(e)}",
                     "message": "Call initiation timed out - Vapi may still be processing",
