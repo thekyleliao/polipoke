@@ -7,7 +7,8 @@ A [FastMCP](https://github.com/jlowin/fastmcp) server that integrates with [Vapi
 ## Features
 
 - **Make Vapi Calls**: Trigger outbound phone calls to any destination number
-- **Fixed Source**: Uses your configured Vapi phone number and assistant
+- **Dual Assistant Support**: Choose between Andy or Mam assistant for calls
+- **Fixed Source**: Uses your configured Vapi phone number and selected assistant
 - **Detailed Responses**: Returns call ID, status, transcript, duration, and cost information
 - **Poke Integration**: Connect to Poke for voice-activated phone calls
 - **Enhanced Error Handling**: Comprehensive error messages with troubleshooting suggestions
@@ -21,7 +22,8 @@ Create a `.env.local` file (for local development) or configure these in your de
 
 ```bash
 VAPI_API_KEY=your_vapi_api_key_here
-ANDY=your_assistant_id_here
+ANDY=your_andy_assistant_id_here
+MAM=your_mam_assistant_id_here
 PHONE=your_phone_id_here
 ```
 
@@ -75,6 +77,7 @@ Triggers an outbound phone call using Vapi API.
 **Parameters:**
 - `destination_phone_number` (required): The phone number to call **with country code** (e.g., "+1234567890")
 - `customer_name` (optional): Name of the customer for context
+- `assistant` (optional): Assistant to use for the call ("andy" or "mam", defaults to "andy")
 
 **Enhanced Response:**
 ```json
@@ -82,7 +85,8 @@ Triggers an outbound phone call using Vapi API.
   "success": true,
   "call_id": "call_123456",
   "status": "completed",
-  "message": "Call successfully initiated to +1234567890",
+  "message": "Call successfully initiated to +1234567890 using Andy assistant",
+  "assistant_used": "andy",
   "assistant_id": "your_assistant_id",
   "phone_id": "your_phone_id",
   "customer_number": "+1234567890",
@@ -101,9 +105,11 @@ Triggers an outbound phone call using Vapi API.
 {
   "success": false,
   "error": "Vapi API error (HTTP 400): Invalid phone number format",
+  "error_type": "api_error",
   "error_code": "invalid_phone",
-  "message": "Failed to initiate call to 1234567890",
+  "message": "Failed to initiate call to 1234567890 using Andy assistant",
   "status_code": 400,
+  "assistant_requested": "andy",
   "suggestion": "Use international format with country code (e.g., +1234567890)"
 }
 ```
@@ -147,6 +153,7 @@ render services list
 # Set environment variables (replace SERVICE_ID with your actual service ID)
 render services env set --service-id <SERVICE_ID> --key VAPI_API_KEY --value 19ca13e0-2ccd-4ad5-bee4-5101d59d08f0
 render services env set --service-id <SERVICE_ID> --key ANDY --value cde00b8a-3ebf-4d4f-8587-7e8fec8e5fda
+render services env set --service-id <SERVICE_ID> --key MAM --value your_mam_assistant_id_here
 render services env set --service-id <SERVICE_ID> --key PHONE --value 9b27907e-7ea3-4b4a-9c78-fc2bcf5379b9
 
 # Alternative: Bulk set from .env file
@@ -159,7 +166,7 @@ You can connect your MCP server to Poke at [poke.com/settings/connections](https
 
 ### Example Usage in Poke
 
-**Basic call:**
+**Basic call (using Andy assistant):**
 ```
 Tell the subagent to use the "Vapi MCP" integration's "make_vapi_call" tool to call +1234567890
 ```
@@ -169,9 +176,14 @@ Tell the subagent to use the "Vapi MCP" integration's "make_vapi_call" tool to c
 Tell the subagent to use the "Vapi MCP" integration's "make_vapi_call" tool to call +1234567890 for customer John Smith
 ```
 
+**Call using Mam assistant:**
+```
+Tell the subagent to use the "Vapi MCP" integration's "make_vapi_call" tool to call +1234567890 using Mam assistant
+```
+
 **Voice command example:**
 ```
-"Hey Poke, call +1234567890 using the Vapi integration"
+"Hey Poke, call +1234567890 using the Vapi integration with Mam assistant"
 ```
 
 ### Troubleshooting
@@ -180,7 +192,7 @@ Tell the subagent to use the "Vapi MCP" integration's "make_vapi_call" tool to c
 
 1. **"Missing environment variables" error:**
    - Ensure `.env.local` file exists with all required variables
-   - Check that `VAPI_API_KEY`, `ANDY`, and `PHONE` are set correctly
+   - Check that `VAPI_API_KEY`, `ANDY`, `MAM`, and `PHONE` are set correctly
 
 2. **"Invalid phone number format" error:**
    - Always use international format with country code: `+1234567890`
