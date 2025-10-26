@@ -1,8 +1,8 @@
 # Vapi MCP Server
 
-A [FastMCP](https://github.com/jlowin/fastmcp) server that integrates with [Vapi AI](https://vapi.ai) to trigger outbound phone calls. Deployable to Render with streamable HTTP transport.
+A [FastMCP](https://github.com/jlowin/fastmcp) server that integrates with [Vapi AI](https://vapi.ai) to trigger outbound phone calls. Deployable to railway with streamable HTTP transport.
 
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/InteractionCo/mcp-server-template)
+[![Deploy to railway](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/InteractionCo/mcp-server-template)
 
 ## Features
 
@@ -125,6 +125,33 @@ Click the "Deploy to Render" button above.
 6. Render will automatically detect the `render.yaml` configuration
 
 Your server will be available at `https://your-service-name.onrender.com/mcp` (NOTE THE `/mcp`!)
+
+### Option 3: Using Render CLI
+
+If you prefer command line:
+
+```bash
+# Install Render CLI (choose one method)
+# Option 1: Homebrew (macOS/Linux)
+brew install render
+
+# Option 2: Download from GitHub releases
+# Visit: https://github.com/render/render-cli/releases
+
+# Login to Render
+render login
+
+# List your services to find the service ID
+render services list
+
+# Set environment variables (replace SERVICE_ID with your actual service ID)
+render services env set --service-id <SERVICE_ID> --key VAPI_API_KEY --value 19ca13e0-2ccd-4ad5-bee4-5101d59d08f0
+render services env set --service-id <SERVICE_ID> --key ANDY --value cde00b8a-3ebf-4d4f-8587-7e8fec8e5fda
+render services env set --service-id <SERVICE_ID> --key PHONE --value 9b27907e-7ea3-4b4a-9c78-fc2bcf5379b9
+
+# Alternative: Bulk set from .env file
+render services env set --service-id <SERVICE_ID> --env-file .env.local
+```
 
 ## Poke Integration
 

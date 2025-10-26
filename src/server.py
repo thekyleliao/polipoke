@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import httpx
+from typing import Optional
 from fastmcp import FastMCP
 from dotenv import load_dotenv
 
@@ -10,7 +11,7 @@ load_dotenv('.env.local')
 mcp = FastMCP("Vapi MCP Server")
 
 @mcp.tool(description="Make an outbound phone call using Vapi API to a specified destination number")
-def make_vapi_call(destination_phone_number: str, customer_name: str = None) -> dict:
+def make_vapi_call(destination_phone_number: str, customer_name: Optional[str] = None) -> dict:
     """
     Trigger an outbound phone call using Vapi API.
     
@@ -129,7 +130,7 @@ def make_vapi_call(destination_phone_number: str, customer_name: str = None) -> 
                     }
                     
             except httpx.TimeoutException as e:
-                return {
+    return {
                     "success": False,
                     "error": f"Request timeout after 60 seconds: {str(e)}",
                     "message": "Call initiation timed out - Vapi may still be processing",
@@ -171,7 +172,7 @@ def make_vapi_call(destination_phone_number: str, customer_name: str = None) -> 
             "customer_number": destination_phone_number,
             "error_type": type(e).__name__,
             "suggestion": "Check server logs for more details"
-        }
+    }
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
