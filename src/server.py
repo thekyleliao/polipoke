@@ -41,7 +41,22 @@ def health_check() -> dict:
             "timestamp": __import__("datetime").datetime.now().isoformat()
         }
 
-@mcp.tool()
+@mcp.tool(description="Simple test tool to verify MCP connection")
+def test_connection() -> dict:
+    """
+    Simple test tool to verify MCP connection is working.
+    
+    Returns:
+        dict: Test response
+    """
+    return {
+        "success": True,
+        "message": "MCP connection is working",
+        "server": "Vapi MCP Server",
+        "tools_available": ["health_check", "test_connection", "make_vapi_call"]
+    }
+
+@mcp.tool(description="Make an outbound phone call using Vapi API to a specified destination number with either Andy or Mam assistant")
 def make_vapi_call(destination_phone_number: str, customer_name: Optional[str] = None, assistant: str = "andy") -> dict:
     """
     Make an outbound phone call using Vapi API to a specified destination number with either Andy or Mam assistant.
@@ -260,14 +275,14 @@ def make_vapi_call(destination_phone_number: str, customer_name: Optional[str] =
             "customer_number": destination_phone_number,
             "error_type_class": type(e).__name__,
             "suggestion": "Check server logs for more details or contact support"
-        }
+    }
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
     host = "0.0.0.0"
     
     print(f"Starting Vapi MCP Server on {host}:{port}")
-    print("Available tools: health_check, make_vapi_call")
+    print("Available tools: health_check, test_connection, make_vapi_call")
     
     # Validate configuration at startup
     try:
@@ -293,11 +308,11 @@ if __name__ == "__main__":
     try:
         logger.info("Starting MCP server...")
         mcp.run(
-            transport="http",
-            host=host,
-            port=port,
-            stateless_http=True
-        )
+        transport="http",
+        host=host,
+        port=port,
+        stateless_http=True
+    )
     except KeyboardInterrupt:
         logger.info("Server stopped by user")
     except Exception as e:
