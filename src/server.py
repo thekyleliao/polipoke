@@ -41,10 +41,10 @@ def health_check() -> dict:
             "timestamp": __import__("datetime").datetime.now().isoformat()
         }
 
-@mcp.tool(description="Make an outbound phone call using Vapi API to a specified destination number with either Andy or Mam assistant")
+@mcp.tool()
 def make_vapi_call(destination_phone_number: str, customer_name: Optional[str] = None, assistant: str = "andy") -> dict:
     """
-    Trigger an outbound phone call using Vapi API.
+    Make an outbound phone call using Vapi API to a specified destination number with either Andy or Mam assistant.
     
     Args:
         destination_phone_number: The phone number to call (e.g., "+1234567890")
@@ -267,7 +267,7 @@ if __name__ == "__main__":
     host = "0.0.0.0"
     
     print(f"Starting Vapi MCP Server on {host}:{port}")
-    print("Available tools: make_vapi_call")
+    print("Available tools: health_check, make_vapi_call")
     
     # Validate configuration at startup
     try:
